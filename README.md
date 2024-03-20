@@ -120,7 +120,7 @@ The dashboard consists of four fields
 - Distribution of precipitation levels in mm for events over grid threshold for a given country for the selected year.
 - Return period plot for the selected country.
 
-![alt_text](data/image2.png "image2")
+![alt_text](data/image2.png "Image2")
 
 <br>
 
