@@ -42,7 +42,6 @@ def main():
     df['lat'] = np.tile(ds['lat'].to_numpy(), ds['lon'].shape[0])
     df['lon'] = np.repeat(ds['lon'].to_numpy(), ds['lat'].shape[0])
     df['lon_adapted'] = df['lon'].apply(lambda x:x-360 if x>180 else x)
-    df.to_parquet('serhad.parquet')
 
     write_country_names_on_coordinates(df)
 
