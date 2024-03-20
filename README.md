@@ -114,6 +114,7 @@ The data model is given in ./data/DataModel.xlsx
 
 
 **The Dashboard**
+
 The dashboard consists of four fields
 - World Map, showing 99th percentile of extreme rainfall events for a selected year.
 - A table showing countries with most distinct events for a selected year.
