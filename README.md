@@ -101,9 +101,29 @@ If required, the files can be executed manually to be able to start app in your 
 **High-level Design:**
 
 
-![alt_text](data/image1.jpg "image_tooltip")
+![alt_text](data/image1.jpg "image1")
 
 <br>
+
+
+**Data Model**
+
+The data model is given in ./data/DataModel.xlsx
+
+<br>
+
+
+**The Dashboard**
+The dashboard consists of four fields
+- World Map, showing 99th percentile of extreme rainfall events for a selected year.
+- A table showing countries with most distinct events for a selected year.
+- Distribution of precipitation levels in mm for events over grid threshold for a given country for the selected year.
+- Return period plot for the selected country.
+
+![alt_text](data/image2.png "image2")
+
+<br>
+
 
 **Determination of extreme rainfall thresholds**
 
