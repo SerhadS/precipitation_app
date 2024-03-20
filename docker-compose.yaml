@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: aon
+      POSTGRES_PORT: 5432
+    ports:
+      - "5432:5432"
+
+  myapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: aon
+      POSTGRES_PORT: 5432
+    ports:
+      - "4255:4255"
