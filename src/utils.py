@@ -22,7 +22,7 @@ def get_db_engine():
     db_params = {
             'username': os.getenv('POSTGRES_USER'),
             'password': os.getenv('POSTGRES_PASSWORD'),
-            'host': 'localhost',
+            'host': os.getenv('POSTGRES_HOST'),
             'port': os.getenv('POSTGRES_PORT'),
             'database': os.getenv('POSTGRES_DB')
         }

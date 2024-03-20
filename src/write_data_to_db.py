@@ -113,7 +113,7 @@ def write_extreme_events_db(threshold_array, engine, year_start = 1994, year_end
         del res
         gc.collect()
 
-    return res
+    return 1
 
 def main():
     """Main function
