@@ -9,16 +9,16 @@ from utils import get_db_engine
 
 
 def get_daily_maximum_per_country(engine, year_start = 1994, year_end = 2014, target_folder = '../data'):
-    """_summary_
+    """Calculates and Writes the daily maximum per country
 
     Args:
-        engine (_type_): _description_
-        year_start (int, optional): _description_. Defaults to 1994.
-        year_end (int, optional): _description_. Defaults to 2014.
-        target_folder (str, optional): _description_. Defaults to '../data'.
+        engine (sqlalchemy engine): Engine
+        year_start (int, optional): Start year for the analysis. Defaults to 1994.
+        year_end (int, optional): End year for the analysis. Defaults to 2014.
+        target_folder (str, optional): Data folder. Defaults to '../data'.
 
     Returns:
-        _type_: _description_
+        pd.DataFrame: Partial result
     """
     
     print('Getting map_coord_to_loc')
@@ -26,7 +26,6 @@ def get_daily_maximum_per_country(engine, year_start = 1994, year_end = 2014, ta
     country_coord = country_coord.drop(columns = ['lat', 'lon', 'closest_city'])
     
     temp_file = os.path.join(target_folder, '{year}.nc')
-    # temp = []
     for year in range(year_start, year_end+1):
         print(f'Calculating maximum daily precipitation in {year} for each country')
 
@@ -37,10 +36,6 @@ def get_daily_maximum_per_country(engine, year_start = 1994, year_end = 2014, ta
         #get rid of nan values for heal
         # the matrix operations
         pr_data[np.isnan(pr_data)] = 0
-        # df =country_coord.copy()
-        # df = pd.concat([df]*ds['time'].shape[0])
-        # df['datetime'] = np.repeat(ds['time'], ds['lat'].shape[0]*ds['lon'].shape[0])
-        # country_coord['pr_mm'] = pr_data.flatten()
 
         res = pd.DataFrame()
         for i, date in enumerate(ds['time'].to_numpy()):
@@ -49,9 +44,7 @@ def get_daily_maximum_per_country(engine, year_start = 1994, year_end = 2014, ta
             df['pr_mm'] = pr_data[i].flatten()
             df['datetime']= date
             df = df.groupby(['closest_country', 'datetime'])['pr_mm'].max().reset_index()
-            # df = df.sort_values(by=['closest_country', 'pr_mm'], ascending = [True, False])\
-            #     .drop_duplicates(subset = ['closest_country'], keep='first')
-            # df = df.drop(columns=['lat', 'lon'])
+
             res = pd.concat([res,df], ignore_index = True)
         print(f'Writing to max_daily_pr_country table for {year}')
         res.to_sql('max_daily_pr_country', con=engine, index=False, if_exists='append')
@@ -62,17 +55,17 @@ def get_daily_maximum_per_country(engine, year_start = 1994, year_end = 2014, ta
     return res
 
 def calculate_return_period(engine, year_start = 1994, year_end = 2014, target_folder = '../data/', overwrite=True):
-    """_summary_
+    """Calculate necessary data points to plot return period
 
     Args:
-        engine (_type_): _description_
-        year_start (int, optional): _description_. Defaults to 1994.
-        year_end (int, optional): _description_. Defaults to 2014.
-        target_folder (str, optional): _description_. Defaults to '../data/'.
-        overwrite (bool, optional): _description_. Defaults to True.
+        engine (sqlalchemy engine): Engine
+        year_start (int, optional): Start year for the analysis. Defaults to 1994.
+        year_end (int, optional): End year for the analysis. Defaults to 2014.
+        target_folder (str, optional): Data folder. Defaults to '../data'.
+        overwrite (bool, optional): True if want to overwrite the file. Defaults to True.
 
     Returns:
-        _type_: _description_`
+        dict: calculated traces to plot the return period
     """
 
     df = pd.read_sql('''
@@ -113,6 +106,8 @@ def calculate_return_period(engine, year_start = 1994, year_end = 2014, target_f
 
 
 def main():
+    """Main method
+    """
 
 
     engine = get_db_engine()
