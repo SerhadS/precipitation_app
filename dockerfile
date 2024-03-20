@@ -20,8 +20,9 @@ FROM python:3.11
 # ENV PATH="/aon/bin:$PATH"
 
 COPY src /src/
+COPY data /data/
 RUN chmod +x /src
-
+RUN chmod +x /data
 # install requirements
 RUN pip3 install --no-cache-dir -r src/requirements.txt
 
@@ -36,9 +37,4 @@ EXPOSE 4255
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-# WORKDIR /src
 
-# RUN python3 write_data_to_db.py
-# RUN python3 get_country_city_names.py
-# RUN python3 get_daily_maximum.py
-# RUN python3 visualization.py
