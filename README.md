@@ -1,107 +1,87 @@
-**Detecting Extreme Rainfall Events**
+# Detecting Extreme Rainfall Events
 
-This repository introduces an app to visualize extreme rainfall events between years 1994 and 2014.
+This repository presents an application designed to visualize and analyze extreme rainfall events from 1994 to 2014.
 
-**Data source**
+## Data Source
 
-The main data source used in this case is NASA’s Earth Exchange Global Daily Downscaled Projections (NEX-GDDP-CMIP6) which contains daily raw climate data to a 1/4° spatial resolution (~25km).
-
-The dataset that was extracted from the following S3 bucket:
+The primary dataset utilized is from NASA’s Earth Exchange Global Daily Downscaled Projections (NEX-GDDP-CMIP6), offering daily climate data with a spatial resolution of approximately 1/4° (~25km). The data was retrieved from the following S3 bucket:
 
 [NEX-GDDP-CMIP6 | Data Browse (amazonaws.com)](https://nex-gddp-cmip6.s3.us-west-2.amazonaws.com/index.html#NEX-GDDP-CMIP6/ACCESS-CM2/historical/r1i1p1f1/pr/)
 
+## Main Goals
 
-<br>
+The application aims to:
 
-**Main Goals**
+1. Identify and visualize the extreme rainfall events at a grid level and highlight the most significant events globally, year by year.
+2. Calculate and visualize the return period of rainfall events for each country.
+3. Display the annual distribution of extreme rainfall events per country.
+4. Report the countries experiencing the most extreme events annually.
 
-The app’s main goals can be summarized as follows:
+## Setup
 
-1- Determine extreme rainfall thresholds in grid level and visualize top events (with highest precipitation levels) worldwide per year.
+### Prerequisites
 
-2- Determine the return-period of the rainfall events per country and visualize.
+- Docker
 
-3- Visualize yearly distribution of extreme rainfall events per country and visualize.
+### Installation and Running
 
-4- Determine countries with the most extreme events per year and report.
+Clone the repository and navigate to the project directory:
 
-<br>
+```bash
+git clone https://github.com/SerhadS/precipitation_app.git extreme_rainfall
+cd extreme_rainfall
+```
 
-**Setup**
+Build and launch the application using Docker:
 
-To run the app, you should install docker. After installing docker, please follow the below steps:
+```bash
+docker-compose up
+```
 
-```git clone https://github.com/SerhadS/precipitation_app.git extreme_rainfall```
+This command sets up a PostgreSQL database, downloads the necessary data from the S3 bucket, processes the data for analysis, and starts the web app for visualization.
 
-```cd extreme_rainfall```
+Access the dashboard via http://localhost:4255.
 
-```docker-compose up```
+### Manual Setup
 
-The series of commands above will create a postgres database, download necessary files from S3 bucket, process the files to write aggregated data for analysis, and finally start a web-app to visualize the processed data.
+If you prefer to manually execute the files, follow these steps (tested on Python 3.11, compatibility with other versions is not guaranteed):
 
-The dashboard (web-app) can be reached through ```localhost:4255```.
+```bash
+git clone https://github.com/SerhadS/precipitation_app.git extreme_rainfall
+cd extreme_rainfall/src
+# Create or switch to your desired Python environment
+pip install -r requirements.txt
+python write_data_to_db.py
+python get_country_city_names.py
+python get_daily_maximum.py
+python visualization.py
+```
+## Repository Structure
 
-If required, the files can be executed manually to be able to start app in your own environment following the below steps. Please note that this repo is tested in Python 3.11. Execution is not guaranteed in other python versions:
+```
+- src/
+  - mevpy/
+  - get_country_city_names.py
+  - get_daily_maximum.py
+  - requirements.txt
+  - visualization.py
+  - write_data_to_db.py 
+- data/
+- Dockerfile
+- docker-compose.yaml
+```
 
-```git clone https://github.com/SerhadS/precipitation_app.git extreme_rainfall```
+## File Descriptions
 
-```cd extreme_rainfall/src```
+- `write_data_to_db.py`: Processes files from S3, identifies extreme rainfall thresholds, and flags events above these thresholds.
+- `get_country_city_names.py`: Maps grids to the nearest country and city.
+- `get_daily_maximum.py`: Aggregates daily maximum rainfall data at the country level.
+- `visualization.py`: Generates and serves the dashboard.
+- `mevpy`: An external package.
 
-```<CREATE OR SWITCH TO YOUR OWN PYTHON ENV>```
+## High-level Design
 
-```pip install requirements.txt```
-
-```python write_data_to_db.py```
-
-```python get_country_city_names.py```
-
-```python get_daily_maximum.py```
-
-```python visualization.py```
-
-<br>
-
-**Repo Structure**
-
-    | - src
-
-        | - mevpy /
-
-        | - get_country_city_names.py
-
-        | - get_daily_maximum.py
-
-        | - requirements.txt
-
-        | - visualization.py
-
-        | - write_data_to_db.py 
-
-    | - data
-
-    | - Dockerfile
-
-    | - docker-compose.yaml
-
-
-<br>
-
-**File definitions:**
-
-
-
-* write_data_to_db.py: includes methods to download necessary files from S3 bucket, process them, identify extreme rainfall thresholds for each grid, and identify events for each grid which are above the defined thresholds.
-* get_country_city_names.py: Maps each grid to the closest country and city.
-* get_daily_maximum.py: Aggregated precipitation data at the country level to identify maximum rainfall for each day in order to calculate the return period of rainfall events.
-* visualization.py: Creates and serves the dashboard.
-* mevpy: external package
-
-<br>
-
-**High-level Design:**
-
-
-![alt_text](data/image1.jpg "image1")
+![High-level Design](data/image1.jpg "image1")
 
 <br>
 
@@ -110,23 +90,20 @@ If required, the files can be executed manually to be able to start app in your 
 
 The data model is given in ./data/DataModel.xlsx
 
-<br>
+## Dashboard Overview
 
+The dashboard features:
 
-**The Dashboard**
+- A world map displaying the 99th percentile of extreme rainfall events for a selected year.
+- A table of countries with the most significant events for a selected year.
+- A distribution chart of precipitation levels for events exceeding the grid threshold in a selected country and year.
+- A return period plot for a selected country.
 
-The dashboard consists of four fields
-- World Map, showing 99th percentile of extreme rainfall events for a selected year.
-- A table showing countries with most distinct events for a selected year.
-- Distribution of precipitation levels in mm for events over grid threshold for a given country for the selected year.
-- Return period plot for the selected country.
+![Dashboard](data/image2.jpg)
 
-![alt_text](data/image2.jpg "image2")
+## Methodology
 
-<br>
-
-
-**Determination of extreme rainfall thresholds**
+### Extreme rainfall thresholds
 
 The logic for determination of thresholds for each grid was simple. It is basically the mean of maximum precipitation levels attained in years under investigation. These mean values for each grid are then used to identify extreme rainfall events. The only assumption made during the calculation of thresholds is ‘filtering out the precipitation levels lower than 1mm’ to avoid left-skewed distributions and noise build up. 
 
@@ -134,6 +111,6 @@ In the visualization (world-map), only the events that make up to 99th percentil
 
 <br>
 
-**Determination of return values per country:**
+### Return period calculation
 
 For each day, the maximum precipitation within a country is identified and recorded for the period of the study (21 years). Therefore, it was possible to calculate the discrete return period of the events aggregated at the country level. Models can be fit to this data to mathematical modelling of these return periods. However, for this case study, the graphs are plotted using only the observed data.
