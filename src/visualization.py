@@ -209,6 +209,6 @@ def update_return_value(selected_country):
 
 # Run the app
 if __name__ == '__main__':
-    app.run_server(debug=True, port=4255)
+    app.run_server(host = ('0.0.0.0'), debug=True, port=4255)
 
 
