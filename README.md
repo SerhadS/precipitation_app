@@ -110,10 +110,10 @@ The logic for determination of thresholds for each grid was simple. It is basica
 The method can be mathematically represented as follows:
 
 ```math
-\text{Extreme\_Rainfall\_Threshold}_{i,j,k} = \text{mean}\left( \max_{\forall k} \left( \text{PR}[i][j][k] \right) \right)
+\text{Extreme\_Rainfall\_Threshold}_{i,j} = \text{mean}_{\forall k}\left( \max_{\forall t} \left( \text{PR}[i][j][k][t] \right) \right)
 ```
 
-where (i,j) represents a (lat, lon) tuple and k represents the year. 
+where (i,j) represents a (lat, lon) tuple, k represents the year and t represents date. 
 
 
 In the visualization (world-map), only the events that make up to 99th percentile (most extreme in a given year) are plotted to keep the dashboard clean and easily comprehensible.
