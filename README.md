@@ -107,6 +107,10 @@ The dashboard features:
 
 The logic for determination of thresholds for each grid was simple. It is basically the mean of maximum precipitation levels attained in years under investigation. These mean values for each grid are then used to identify extreme rainfall events. The only assumption made during the calculation of thresholds is ‘filtering out the precipitation levels lower than 1mm’ to avoid left-skewed distributions and noise build up. 
 
+$$
+\text{Extreme\_Rainfall\_Threshold}_{i,j} = \text{mean}_{\forall k}\left( \max_{\forall t} \left( \text{PR}[i][j][k][t] \right) \right)
+$$
+
 In the visualization (world-map), only the events that make up to 99th percentile (most extreme in a given year) are plotted to keep the dashboard clean and easily comprehensible.
 
 <br>
