@@ -1,4 +1,12 @@
 aon/*
-data/*
-.ipynb*
+
 __pycache__
+*.nc
+
+# data
+./data/*
+*.ipynb*
+*.parquet
+.DS_Store
+*.pickle
+*.pkl
